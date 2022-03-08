@@ -69,6 +69,10 @@ int main()
     UpdateMemberShoppingFrequency(&members, 102, 3);
 
     updateDatabase("database.txt", &members);
+
+
+    for (int i = 0; i < members.length; ++i)
+        string32VectorDelete(&members.value[i].ShoppingList);
     memberVectorDelete(&members);
 
 
