@@ -1,0 +1,3 @@
+ID:102,FName:Greg,LName:Smith,ShoppingFrequency:7,ShoppingList:Watermelon|Milk|Pasta|Chicken
+ID:103,FName:Alfonso,LName:Mallioni,ShoppingFrequency:2,ShoppingList:Pizza|Tomatos|Milk
+ID:100,FName:Sam,LName:Robertson,ShoppingFrequency:14,ShoppingList:Apples|Oranges|Rice|Lamb Chops|Eggs
