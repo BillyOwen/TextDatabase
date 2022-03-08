@@ -2,8 +2,28 @@
 
 struct String32
 {
+    //Must be null terminated
     char value[32];
 };
+
+void string32Create(struct String32* string32, const char string[])
+{
+    for (int i = 0;; ++i)
+    {
+        string32->value[i] = string[i];
+        if (string[i] == '\0') return;
+    }
+}
+
+int compareStrings(const char a[], const char b[])
+{
+    for (int i = 0;; ++i)
+    {
+        if (a[i] != b[i]) return 0;
+        if (a[i] == '\0') return 1;
+    }
+    return 0;
+}
 
 
 //Vector Stuff
