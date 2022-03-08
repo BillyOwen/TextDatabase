@@ -1,10 +1,8 @@
 
 /*
-Format:
+Database Format:   (Can be changed without much difficulty)
 
-ID:101,FName:Greg,LName:Smith,ShoppingFrequency:7,ShoppingList:Watermelon|Milk|Pasta|Chicken\n
-ID:102,FName:,LName:,ShoppingFrequency:,ShoppingList:\n
-
+FName:Greg,LName:Smith,ShoppingFrequency:7,ShoppingList:Watermelon|Milk|Pasta|Chicken\n
 
 */
 
@@ -264,3 +262,149 @@ struct Member memberVectorRemove(struct memberVector* vector, unsigned int index
 
 	return returnValue;
 }
+
+
+
+//Database operations
+
+void printMembers(struct memberVector* members)
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        printf("%d\t%s\t%s\t%d\t",members->value[i].ID,members->value[i].FName.value,members->value[i].LName.value,members->value[i].ShoppingFrequency);
+        for (int j = 0; j < members->value[i].ShoppingList.length; ++j)
+        {
+            printf("%s\t",members->value[i].ShoppingList.value[j].value);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+
+//Also add a way to add which handles IDs
+void AddNewMember(struct memberVector* members, struct Member member)
+{
+    memberVectorPush(members, member);
+}
+
+int DeleteMember(struct memberVector* members, int id)
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            memberVectorRemove(members, i);
+            return 0;
+        }
+    }
+    return 1;
+}
+
+//Returns 0 on success, 1 if member not found
+int UpdateMemberFirstName(struct memberVector* members, int id, const char string[])
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            string32Create(&members->value[i].FName, string);
+            return 0;
+        }
+    }
+    return 1;
+}
+
+//Returns 0 on success, 1 if member not found
+int UpdateMemberLastName(struct memberVector* members, int id, const char string[])
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            string32Create(&members->value[i].LName, string);
+            return 0;
+        }
+    }
+    return 1;
+}
+
+//Returns 0 on success, 1 if member not found
+int UpdateMemberShoppingFrequency(struct memberVector* members, int id, int shoppingFrequency)
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            members->value[i].ShoppingFrequency = shoppingFrequency;
+            return 0;
+        }
+    }
+    return 1;
+}
+
+//Returns 0 on success, 1 if member not found
+int UpdateMemberClearShoppingList(struct memberVector* members, int id)
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            int length = members->value[i].ShoppingList.length;
+            for (int j = 0; j < length; ++j)
+            {
+                string32VectorPop(&members->value[i].ShoppingList);
+            }
+            return 0;
+        }
+    }
+    return 1;
+}
+
+//Returns 0 on success, 1 if item already on list and 2 if member not found
+int UpdateMemberAddItemToShoppingList(struct memberVector* members, int id, const char item[])
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            //Check if it is there
+            for (int j = 0; j < members->value[i].ShoppingList.length; ++j)
+            {
+                if (compareStrings(members->value[i].ShoppingList.value[j].value, item))
+                {
+                    return 1;
+                }
+            }
+            //Add it
+            struct String32 newItem;
+            string32Create(&newItem, item);
+            string32VectorPush(&(members->value[i].ShoppingList), newItem);
+            return 0;
+        }
+    }
+    return 2;
+}
+//Returns 0 on success, 1 if member found but not item and 2 if member not found
+int UpdateMemberRemoveItemFromShoppingList(struct memberVector* members, int id, const char item[])
+{
+    for (int i = 0; i < members->length; ++i)
+    {
+        if (members->value[i].ID == id)
+        {
+            for (int j = 0; j < members->value[i].ShoppingList.length; ++j)
+            {
+                if (compareStrings(item, members->value[i].ShoppingList.value[j].value))
+                {
+                    string32VectorRemove(&members->value[i].ShoppingList, j);
+                    return 0;
+                }
+            }
+            return 1;
+        }
+    }
+    return 2;
+}
+
+
+
